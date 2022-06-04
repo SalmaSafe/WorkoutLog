@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">workoutLog</string>
+    <string name="email_required">Email is required</string>
+    <string name="password_required" />
 </resources>
