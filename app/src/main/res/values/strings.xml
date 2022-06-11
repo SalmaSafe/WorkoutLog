@@ -2,4 +2,8 @@
     <string name="app_name">workoutLog</string>
     <string name="email_required">Email is required</string>
     <string name="password_required" />
+    <string name="track">Track</string>
+    <string name="Profile" />
+    <string name="Plan" />
+    <string name="Track" />
 </resources>

@@ -87,8 +87,10 @@ class SignupActivity : AppCompatActivity() {
 
         }
         if (confirm==sPassword) {
+            return
 
-        } else{
+        }
+        else{
             tilConfirmP.error="Password Invalid"
 
         }
