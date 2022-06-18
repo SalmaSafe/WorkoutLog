@@ -56,9 +56,10 @@ class LoginActivity : AppCompatActivity() {
             tilPassword.error = "Password is required"
             error = true
         }
-        if (error){
+        if (!error){
             startActivity(Intent(this,HomeActivity::class.java))
-
+            finish()
         }
+
     }
 }

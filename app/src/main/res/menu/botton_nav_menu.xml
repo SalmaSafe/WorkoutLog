@@ -3,12 +3,12 @@
     <item
         android:id="@+id/plan"
         android:enabled="true"
-        android:icon="@drawable/plan"
+        android:icon="@drawable/ic_baseline_calendar_today_24"
         android:title="@string/Plan"/>
     <item
         android:id="@+id/track"
         android:enabled="true"
-        android:icon="@drawable/track"
+        android:icon="@drawable/ic_baseline_show_chart_24"
         android:title="@string/Track"/>
     <item
         android:id="@+id/profile"
