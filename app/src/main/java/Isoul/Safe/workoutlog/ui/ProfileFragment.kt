@@ -1,5 +1,6 @@
-package Isoul.Safe.workoutlog
+package Isoul.Safe.workoutlog.ui
 
+import Isoul.Safe.workoutlog.R
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
