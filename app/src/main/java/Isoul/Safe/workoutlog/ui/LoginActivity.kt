@@ -4,14 +4,17 @@ import Isoul.Safe.workoutlog.R
 import Isoul.Safe.workoutlog.databinding.ActivityLoginBinding
 import Isoul.Safe.workoutlog.models.LoginRequest
 import Isoul.Safe.workoutlog.models.LoginResponse
-import Isoul.Safe.workoutlog.retrofit.ApiClient
-import Isoul.Safe.workoutlog.retrofit.ApiInterface
+import Isoul.Safe.workoutlog.api.ApiClient
+import Isoul.Safe.workoutlog.api.ApiInterface
+import Isoul.Safe.workoutlog.viewmodel.UserViewModel
 import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
+import androidx.lifecycle.Observer
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -19,6 +22,7 @@ import retrofit2.Response
 class LoginActivity : AppCompatActivity() {
     lateinit var binding: ActivityLoginBinding
     lateinit var sharedPrefs:SharedPreferences
+    val userViewModel:UserViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
@@ -40,6 +44,19 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        userViewModel.loginResponseLiveData.observe(this, Observer { loginResponse->
+            saveLoginDetails(loginResponse!!)
+            Toast.makeText(baseContext,loginResponse?.message,Toast.LENGTH_LONG).show()
+            startActivity(Intent(baseContext, HomeActivity::class.java))
+            finish()
+        })
+        userViewModel.loginErrorLiveData.observe(this, Observer { error->
+            Toast.makeText(baseContext,error,Toast.LENGTH_LONG).show()
+        })
+    }
+
     private fun validateLogin() {
         var email = binding.etEmail.text.toString()
         var password = binding.etSPassword.text.toString()
@@ -56,39 +73,10 @@ class LoginActivity : AppCompatActivity() {
         }
         if (!error) {
             var loginRequest = LoginRequest(email, password)
-            makeLoginRequest(loginRequest)
+            binding.pbLogin.visibility=View.VISIBLE
+            userViewModel.loginUser(loginRequest)
         }
 
-
-    }
-
-    fun makeLoginRequest(loginRequest: LoginRequest)
-    {
-        var apiClient = ApiClient.buildApiClient(ApiInterface::class.java)
-        var request = apiClient.login(loginRequest)
-
-        request.enqueue(object : Callback<LoginResponse> {
-            override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
-                binding.pbLogin.visibility=View.GONE
-
-                if(response.isSuccessful){
-                    val loginResponse = response.body()
-                    saveLoginDetails(loginResponse!!)
-                    Toast.makeText(baseContext,response.body()?.message,Toast.LENGTH_LONG).show()
-                    startActivity(Intent(baseContext,HomeActivity::class.java))
-                    finish()
-                }else{
-                    val error = response.errorBody()?.string()
-                    Toast.makeText(baseContext,error,Toast.LENGTH_LONG).show()
-                }
-
-            }
-
-            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-                binding.pbLogin.visibility = View.GONE
-                Toast.makeText(baseContext,t.message,Toast.LENGTH_LONG).show()
-            }
-        })
     }
     fun saveLoginDetails(loginResponse: LoginResponse){
         val editor = sharedPrefs.edit()

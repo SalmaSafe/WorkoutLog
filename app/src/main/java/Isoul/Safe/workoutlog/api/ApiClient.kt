@@ -1,8 +1,7 @@
-package Isoul.Safe.workoutlog.retrofit
+package Isoul.Safe.workoutlog.api
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 
 object ApiClient {
     var retrofit= Retrofit.Builder()
